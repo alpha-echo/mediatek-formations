@@ -4,6 +4,7 @@
 {% block stylesheets %}{% endblock %}
 {% block top %}
     <div class="container">
+    
         <div class="text-end">
             <a href="{{ path('logout') }}" class="link-dark">se déconnecter ➜</a>
         </div>
@@ -30,6 +31,9 @@
                         <a class="nav-link" href="{{ path('admin.categories')}}">Catégories</a>
                     </li>
                 </ul>
+            </div>
+            <div class="nav-item justify-content-md-end navbar-nav">
+                <a class="nav-link" href="{{ path('accueil') }}">Retour au site</a>
             </div>
         </nav>
     </div>

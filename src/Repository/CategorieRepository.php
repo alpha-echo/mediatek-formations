@@ -39,6 +39,20 @@ class CategorieRepository extends ServiceEntityRepository
         }
     }
     
+
+    /**
+     * Retourne toutes les categories triées sur le nom de la categories
+     * @param type $ordre
+     * @return Categorie[]
+     */
+    public function findAllOrderByName($ordre): array{
+        return $this->createQueryBuilder('c')
+                ->leftjoin('c.formations', 'f')
+                ->orderBy('c.name', $ordre)
+                ->getQuery()
+                ->getResult();
+    }
+    
     /**
      * Retourne la liste des catégories des formations d'une playlist
      * @param type $idPlaylist
@@ -50,24 +64,10 @@ class CategorieRepository extends ServiceEntityRepository
                 ->join('f.playlist', 'p')
                 ->where('p.id=:id')
                 ->setParameter('id', $idPlaylist)
-                ->orderBy('c.name', 'ASC')
+                ->orderBy('c.name', 'ASC')   
                 ->getQuery()
-                ->getResult();
-    }
-
-    /**
-     * Retourne toutes les categories triées sur le nom de la categories
-     * @param type $ordre
-     * @return Categorie[]
-     */
-    public function findAllOrderByName($ordre): array{
-        return $this->createQueryBuilder('c')
-                ->leftjoin('c.formations', 'f')
-                ->groupBy('f.id')
-                ->orderBy('c.name', $ordre)
-                ->getQuery()
-                ->getResult();
-    }
+                ->getResult();        
+    }    
 
     /**
      * Enregistrements dont un champ contient une valeur
