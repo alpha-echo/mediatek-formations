@@ -6,9 +6,12 @@ use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
+ * @UniqueEntity(fields={"name"}, message="Ce nom est déjà utilisé !")
  */
 class Playlist
 {
@@ -20,7 +23,8 @@ class Playlist
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true, unique=true)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -39,6 +43,11 @@ class Playlist
         $this->formations = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -88,30 +97,28 @@ class Playlist
 
     public function removeFormation(Formation $formation): self
     {
-        if ($this->formations->removeElement($formation)) {
-            // set the owning side to null (unless already changed)
-            if ($formation->getPlaylist() === $this) {
-                $formation->setPlaylist(null);
-            }
+        if ($this->formations->removeElement($formation) && $formation->getPlaylist() === $this) {
+            $formation->setPlaylist(null);
         }
 
         return $this;
     }
 
-	/**
-	 * @return Collection<int, string>
-	 */	
-	public function getCategoriesPlaylist() : Collection
-	{
-		$categories = new ArrayCollection();
-		foreach($this->formations as $formation){
-			$categoriesFormation = $formation->getCategories();
-			foreach($categoriesFormation as $categorieFormation)
-			if(!$categories->contains($categorieFormation->getName())){
-				$categories[] = $categorieFormation->getName();
-			}
-		}
-		return $categories;
-	}
-	
+    /**
+     * @return Collection<int, string>
+     */
+    public function getCategoriesPlaylist() : Collection
+    {
+        $categories = new ArrayCollection();
+        foreach($this->formations as $formation){
+            $categoriesFormation = $formation->getCategories();
+            foreach($categoriesFormation as $categorieFormation){
+                if(!$categories->contains($categorieFormation->getName())){
+                    $categories[] = $categorieFormation->getName();
+                }
+            }
+        }
+        return $categories;
+    }
+       
 }

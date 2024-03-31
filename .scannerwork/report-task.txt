@@ -1,0 +1,6 @@
+projectKey=mediatek-formations
+serverUrl=http://localhost:9000
+serverVersion=10.4.1.88267
+dashboardUrl=http://localhost:9000/dashboard?id=mediatek-formations
+ceTaskId=a5d79715-bb22-4578-b965-431927e67bed
+ceTaskUrl=http://localhost:9000/api/ce/task?id=a5d79715-bb22-4578-b965-431927e67bed
